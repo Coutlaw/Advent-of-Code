@@ -41,52 +41,40 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 // the lifetime is connected to the return value, since its a slice over contents
 fn search<'a>(contents: &'a str) -> i32 {
     let mut trees_hit = 0;
-    let total_right = 0;
+    let mut total_right = 3;
     let right = 3;
-    let down = 1;
+    //let down = 1;
 
-    for line in contents.lines() {
+    for line in contents.lines().skip(1) { 
 
-        let mut new_line: &str;
-        // handle wrapping lines
-        if total_right > line.len() && line.contains("--->"){
-            let mut iter = line.split_whitespace();
-            match iter.next() {
-                Some(val) => new_line = val.repeat(total_right),
-            }
-        }
-
-
-        let mut row = line.chars();
-
-
-        // traverse line
-        let mut row = line.chars();
-        
-
-        let mut iter = line.split_whitespace();
-        if let Some(i) = iter.next() {
-            let mut numbs = i.split("-");
-            let min = numbs.next().unwrap().parse::<usize>().unwrap();
-            let max = numbs.next().unwrap().parse::<usize>().unwrap();
-            if let Some(i) = iter.next() {
-                let ch = i.chars().nth(0).unwrap();
-                if let Some(i) = iter.next() {
-                    let password = i;
-                    let password_values = password.matches(ch).count();
-        
-                    if password_values >= min && password_values <= max {
-                        count += 1;
+        let new_line: String = {
+            if total_right > line.len() - 1 {
+                if line.contains("--->") {
+                    let repeate_num_times = line.len() / total_right;
+                    let mut iter = line.split_whitespace();
+                    if let Some(val) = iter.next() {
+                        String::from(val.repeat(repeate_num_times))
+                    } else {
+                        String::from(line)
                     }
                 } else {
-                    panic!("ahhhh");
+                    total_right = total_right - line.len();
+                    String::from(line)
                 }
             } else {
-                panic!("ahhhh");
+                String::from(line)
+            }
+        };
+
+        // traverse line
+        if let Some(ch) = new_line.chars().nth(total_right) {
+            if ch == '#' {
+                trees_hit += 1;
             }
         } else {
-            panic!("ahhhh");
+            panic!("ahhhhh")
         }
+        total_right += right;
     }
     trees_hit
 }
@@ -95,40 +83,7 @@ fn search<'a>(contents: &'a str) -> i32 {
 // the lifetime is connected to the return value, since its a slice over contents
 // we need the vector to live as long as the contents its a reference too!
 fn search2<'a>(contents: &'a str) -> i32 {
-    let mut count = 0;
-
-    for line in contents.lines() {
-        // THIS IS GOING TO GET SHADY, its a quick and dirty solution plz don't judge
-        // TODO: make this not be so bad
-        let mut iter = line.split_whitespace();
-        if let Some(i) = iter.next() {
-            let mut numbs = i.split("-");
-            let min = numbs.next().unwrap().parse::<usize>().unwrap();
-            let max = numbs.next().unwrap().parse::<usize>().unwrap();
-            if let Some(i) = iter.next() {
-                let ch = i.chars().nth(0).unwrap();
-                if let Some(i) = iter.next() {
-                    let password = i;
-
-
-                    let password_min_value = password.chars().nth(min - 1).unwrap();
-                    let password_max_value = password.chars().nth(max - 1).unwrap();
-        
-                    // XOR
-                    if (password_min_value == ch) ^ (password_max_value == ch) {
-                        count += 1;
-                    }
-                } else {
-                    panic!("ahhhh");
-                }
-            } else {
-                panic!("ahhhh");
-            }
-        } else {
-            panic!("ahhhh");
-        }
-    }
-    count
+    
 }
 
 #[cfg(test)]
@@ -138,12 +93,20 @@ mod tests {
 	#[test]
 	fn part_1() {
 		let contents = "\
-1-3 a: abcde
-1-3 b: cdefg
-2-9 c: ccccccccc
+..##.........##.........##.........##.........##.........##.......  --->
+#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..#...#...#..
+.#....#..#..#....#..#..#....#..#..#....#..#..#....#..#..#....#..#.
+..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#..#.#...#.#
+.#...##..#..#...##..#..#...##..#..#...##..#..#...##..#..#...##..#.
+..#.##.......#.##.......#.##.......#.##.......#.##.......#.##.....  --->
+.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#.#.#.#....#
+.#........#.#........#.#........#.#........#.#........#.#........#
+#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...#.##...#...
+#...##....##...##....##...##....##...##....##...##....##...##....#
+.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#.#..#...#.#  --->
 ";
 
-		assert_eq!(2, search(contents));
+		assert_eq!(7, search(contents));
 
     }
     
