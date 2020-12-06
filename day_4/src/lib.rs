@@ -42,7 +42,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 	Ok(())
 }
 
-// Day 3 part 1
+// Day 4 part 1
 fn search(contents: &str, required: HashSet<&str>) -> i32 {
 
 	let mut fields: HashSet<&str> = HashSet::new();
