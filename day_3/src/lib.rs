@@ -57,8 +57,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 }
 
 // Day 3 part 1
-// the lifetime is connected to the return value, since its a slice over contents
-fn search<'a>(contents: &'a str) -> i64 {
+fn search(contents: &str) -> i64 {
     let mut trees_hit = 0;
     let mut total_right = 3;
     let right = 3;
@@ -99,9 +98,7 @@ fn search<'a>(contents: &'a str) -> i64 {
 }
 
 // Day 2 part 2
-// the lifetime is connected to the return value, since its a slice over contents
-// we need the vector to live as long as the contents its a reference too!
-fn search2<'a>(contents: &'a str, down: usize, right: usize) -> i64 {
+fn search2(contents: &str, down: usize, right: usize) -> i64 {
     let mut trees_hit = 0;
     let mut total_right = right;
     let use_skip = down > 1;
