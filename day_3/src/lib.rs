@@ -26,8 +26,27 @@ impl Config {
 pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 	let contents = fs::read_to_string(config.filename)?;
     
-	let results = if config.version_2 {
-        search2(&contents)
+	let results: i64 = if config.version_2 {
+
+        //Right 1, down 1.
+        let one = search2(&contents, 1, 1);
+        println!("one: {}", one);
+        //Right 3, down 1.
+        let two = search2(&contents, 1, 3);
+        println!("two: {}", two);
+        //Right 5, down 1.
+        let three = search2(&contents, 1, 5);
+        println!("three: {}", three);
+
+        //Right 7, down 1.
+        let four = search2(&contents, 1, 7);
+        println!("four: {}", four);
+
+        //Right 1, down 2.
+        let five = search2(&contents, 2, 1);
+        println!("five: {}", five);
+
+        one * two * three * four * five
     } else {
         search(&contents)
     };
@@ -39,7 +58,7 @@ pub fn run(config: Config) -> Result<(), Box<dyn Error>>{
 
 // Day 3 part 1
 // the lifetime is connected to the return value, since its a slice over contents
-fn search<'a>(contents: &'a str) -> i32 {
+fn search<'a>(contents: &'a str) -> i64 {
     let mut trees_hit = 0;
     let mut total_right = 3;
     let right = 3;
@@ -82,8 +101,51 @@ fn search<'a>(contents: &'a str) -> i32 {
 // Day 2 part 2
 // the lifetime is connected to the return value, since its a slice over contents
 // we need the vector to live as long as the contents its a reference too!
-fn search2<'a>(contents: &'a str) -> i32 {
-    
+fn search2<'a>(contents: &'a str, down: usize, right: usize) -> i64 {
+    let mut trees_hit = 0;
+    let mut total_right = right;
+    let use_skip = down > 1;
+    let mut skip = false;
+    //let down = 1;
+
+    for line in contents.lines().skip(1) { 
+        if use_skip && skip {
+            skip = false;
+            continue;
+        }
+        let new_line: String = {
+            if total_right > line.len() - 1 {
+                if line.contains("--->") {
+                    let repeate_num_times = line.len() / total_right;
+                    let mut iter = line.split_whitespace();
+                    if let Some(val) = iter.next() {
+                        String::from(val.repeat(repeate_num_times))
+                    } else {
+                        String::from(line)
+                    }
+                } else {
+                    total_right = total_right - line.len();
+                    String::from(line)
+                }
+            } else {
+                String::from(line)
+            }
+        };
+
+        // traverse line
+        if let Some(ch) = new_line.chars().nth(total_right) {
+            if ch == '#' {
+                trees_hit += 1;
+            }
+        } else {
+            panic!("ahhhhh")
+        }
+        total_right += right;
+        if use_skip {
+            skip = true;
+        }
+    }
+    trees_hit
 }
 
 #[cfg(test)]
@@ -109,16 +171,4 @@ mod tests {
 		assert_eq!(7, search(contents));
 
     }
-    
-    #[test]
-	fn part_2() {
-		let contents = "\
-1-3 a: abcde
-1-3 b: cdefg
-2-9 c: ccccccccc
-";
-
-		assert_eq!(1, search2(contents));
-
-	}
 }
