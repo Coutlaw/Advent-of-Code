@@ -30,7 +30,11 @@ for i in range(0, len(data)):
     row, row_low, column_low, column = 0, 0 , 0 , 0
     row_high = 127
     column_high = 7
+
+# Part 1
+print("Part 1 answer:", max(seatIds))
+# Part 2
 seatIds.sort()
 for i in range(0, len(seatIds)): 
         if (seatIds[i] - seatIds[i-1] > 1) : 
-            print(seatIds[i-1] + 1)
+            print("Part 2 answer:", seatIds[i-1] + 1)
