@@ -60,7 +60,7 @@ fn search(contents: &str, required: HashSet<&str>) -> i32 {
 
 		for field in l.split(" ").into_iter() {
 			let value = field.split(":").into_iter().next().expect("bad format");
-			if value != "cid" && value != "" {
+			if value  != "cid" && value != "" {
 				fields.insert(value);
 			}
 		}
@@ -69,9 +69,37 @@ fn search(contents: &str, required: HashSet<&str>) -> i32 {
 }
 
 // Day 2 part 2
-// fn search2(contents: &str, down: usize, right: usize) -> _ {
-    
-// }
+fn search2(contents: &str, required: HashSet<&str>) -> i32 {
+    let mut fields: HashSet<&str> = HashSet::new();
+	let mut total = 0;
+
+    for line in contents.lines() {
+		let l = line.trim();
+		if l.is_empty() {
+			if required.difference(&fields).count() == 0 {
+				total += 1;
+			}
+			fields.clear();
+			continue
+		}
+
+		for field in l.split(" ").into_iter() {
+			let mut property = field.split(":").into_iter();
+			let name = property.next().expect("bad format");
+			let value = property.next().expect("bad format");
+
+			match name {
+				"byr" => {
+					if value as i32 < 2002 && value as i32 > 1920 {
+						
+					}
+				}
+				_ => continue
+			}
+		}
+	}
+    total
+}
 
 #[cfg(test)]
 mod tests {
