@@ -25,9 +25,12 @@ for i in range(0, len(data)):
             column_low = int(((column_high + column_low + 1) / 2))
     column = column_low
 
-    seatIds.append((row * 8) + column)
+    seatIds.append(int((row * 8) + column))
     # reset the loop vars    
     row, row_low, column_low, column = 0, 0 , 0 , 0
     row_high = 127
     column_high = 7
-print(max(seatIds))
+seatIds.sort()
+for i in range(0, len(seatIds)): 
+        if (seatIds[i] - seatIds[i-1] > 1) : 
+            print(seatIds[i-1] + 1)
