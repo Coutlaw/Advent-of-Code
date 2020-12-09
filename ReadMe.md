@@ -10,4 +10,4 @@ Every day I may structure the module differently, and I will put details below o
 | day_2 |  CLI based app that reads from file. inside `day_2` use `cargo run test1.txt` for pt1 and `V2=1 cargo run test2.txt` for pt2     |
 | day_3 |  CLI based app that reads from file. inside `day_3` use `cargo run test2.txt` for pt1 and `V2=1 cargo run test4.txt` for pt2     |
 | day_4 |  CLI based app that reads from file. inside `day_4` use `cargo run test1.txt` for pt1 and `V2=1 cargo run test2.txt` for pt2     |
-| day_5 |  CLI based Python script. run with `python3 day_5` and the script will correctly source the test data |
+| day_5 |  CLI based Python script. run with `python3 ./day_5/day_5.py` and the script will correctly source the test data |
